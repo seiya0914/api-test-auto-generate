@@ -116,3 +116,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Instance folder (contains configs, DBs, etc.)
+instance/
+
+# SQLite databases
+*.db
+*.db-journal

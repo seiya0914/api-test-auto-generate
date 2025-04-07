@@ -6,15 +6,28 @@ authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13,<4.0"
-dependencies = ["schemathesis (>=3.39.15,<4.0.0)", "requests (>=2.32.3,<3.0.0)", "flask (>=3.1.0,<4.0.0)"]
+dependencies = ["schemathesis (>=3.39.15,<4.0.0)", "requests (>=2.32.3,<3.0.0)", "flask (>=3.1.0,<4.0.0)", "flask-sqlalchemy (>=3.1.1,<4.0.0)"]
 
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.poetry]
+name = "restapi-auto-test"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{ include = "api_app", from = "src" }]
+
+[tool.poetry.dependencies]
+python = ">=3.13,<4.0"
+schemathesis = ">=3.39.15,<4.0.0"
+requests = ">=2.32.3,<3.0.0"
+flask = ">=3.1.0,<4.0.0"
+flask-sqlalchemy = ">=3.1.1,<4.0.0"
+
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 pytest-html = "^4.1.1"
-

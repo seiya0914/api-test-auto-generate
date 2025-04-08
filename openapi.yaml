@@ -1,0 +1,42 @@
+openapi: 3.0.2
+info:
+  title: Simple Employee List API
+  version: 1.0.0
+  description: An extremely basic API to list employees.
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /users:
+    get:
+      summary: Get a list of employees
+      operationId: listEmployees
+      tags:
+        - Employees
+      responses:
+        '200':
+          description: A list of employees with name and department.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SimpleEmployee'
+
+components:
+  schemas:
+    SimpleEmployee:
+      type: object
+      required:
+        - name
+        - department
+      properties:
+        name:
+          type: string
+          description: Employee's name.
+          example: Taro Yamada
+        department:
+          type: string
+          description: Employee's department.
+          example: Sales

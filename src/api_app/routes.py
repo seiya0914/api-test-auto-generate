@@ -29,6 +29,7 @@ def update_user_profile(uuid_str):
     """Update user profile by userId."""
     user_id = str(uuid_str) # Ensure it's a string for lookup
     user = db.session.get(User, user_id)
+    return jsonify(user.to_dict()), 500
     if not user:
         return jsonify({"code": "USER_NOT_FOUND", "message": "User not found"}), 404
 

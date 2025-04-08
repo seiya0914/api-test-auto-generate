@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   title: Simple Employee List API
   version: 1.0.0
-  description: An extremely basic API to list employees.
+  description: An extremely basic API to list, create, and update employees.
 servers:
   - url: http://localhost:8000
     description: Development server
@@ -33,7 +33,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SimpleEmployee'
+              $ref: '#/components/schemas/SimpleEmployee' # Request body includes ID, handled by app logic
       responses:
         '201':
           description: Employee created successfully.
@@ -48,14 +48,60 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        description: The unique identifier of the employee.
+        schema:
+          type: string
+          format: uuid
+    put:
+      summary: Update an existing employee
+      operationId: updateEmployee
+      tags:
+        - Employees
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleEmployeeUpdate' # Use new schema for update
+      responses:
+        '200':
+          description: Employee updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleEmployee'
+        '400':
+          description: Invalid input data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Employee not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
 components:
   schemas:
     SimpleEmployee:
       type: object
       required:
+        - id
         - name
         - department
       properties:
+        id:
+          type: string
+          format: uuid # Specify format for clarity
+          description: Unique identifier for the employee.
+          readOnly: true # ID is typically not changed via PUT body
         name:
           type: string
           description: Employee's name.
@@ -64,6 +110,22 @@ components:
           type: string
           description: Employee's department.
           example: Sales
+
+    SimpleEmployeeUpdate:
+      type: object
+      required:
+        - name
+        - department
+      properties:
+        name:
+          type: string
+          description: Employee's updated name.
+          example: Taro Yamada Updated
+        department:
+          type: string
+          description: Employee's updated department.
+          example: Sales Updated
+
     Error:
       type: object
       required:

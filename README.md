@@ -18,6 +18,7 @@
 - SQLite - データベース
 - Pydantic - データバリデーション
 - Uvicorn - ASGI サーバー
+- Schemathesis - API テスト自動化ツール
 
 ## 前提条件
 
@@ -59,6 +60,26 @@ FastAPI の自動生成されたドキュメントは以下の URL で確認で�
 
 - Swagger UI: http://localhost:8000/docs
 - ReDoc: http://localhost:8000/redoc
+
+## API テスト
+
+### Schemathesis を使用した API テスト
+
+Schemathesis は OpenAPI 仕様に基づいて API テストを自動生成・実行するツールです。以下のコマンドでテストを実行できます：
+
+```bash
+# OpenAPI 仕様ファイルを使用して API テストを実行
+poetry run st run openapi.yaml --base-url=http://localhost:8000
+
+# 詳細なレポートを出力
+poetry run st run openapi.yaml --base-url=http://localhost:8000 --report
+
+# 特定のエンドポイントのみテスト
+poetry run st run openapi.yaml --base-url=http://localhost:8000 --endpoint "/users/"
+
+# テストケース数を増やす
+poetry run st run openapi.yaml --base-url=http://localhost:8000 --hypothesis-max-examples=100
+```
 
 ## API エンドポイント
 

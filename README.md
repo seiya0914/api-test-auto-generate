@@ -81,6 +81,30 @@ poetry run st run openapi.yaml --base-url=http://localhost:8000 --endpoint "/use
 poetry run st run openapi.yaml --base-url=http://localhost:8000 --hypothesis-max-examples=100
 ```
 
+### OpenAPI Linkを使用したステートフルテスト
+
+OpenAPI仕様のLink機能を使用して、関連するエンドポイント間の依存関係をテストできます。これにより、リソース特定が必要なエンドポイント（例：`GET /users/{userId}`）のテストが可能になります。
+
+```bash
+# ステートフルテストの実行（実験的機能）
+poetry run st run openapi.yaml --base-url=http://localhost:8000 --experimental=stateful-test-runner
+```
+
+#### ステートフルテストの仕組み
+
+1. **OpenAPI Link**: OpenAPI仕様内で定義されたリンクにより、エンドポイント間の関連性が表現されます。
+   - 例：`POST /users/` → `GET /users/{userId}`（作成したユーザーの取得）
+   - 例：`GET /users/{userId}` → `PUT /users/{userId}`（取得したユーザーの更新）
+
+2. **テストシナリオ**: Schemathesisは定義されたリンクに基づいて自動的にテストシナリオを生成します。
+   - ユーザー作成 → 取得 → 更新 → 削除
+   - ユーザー作成 → 更新 → 取得 → 削除
+   - その他様々な組み合わせ
+
+3. **レポート**: テスト結果には、各リンクの成功率や失敗したケースの詳細が含まれます。
+
+この方法により、単一エンドポイントのテストだけでなく、APIの実際の利用シナリオに近いテストが可能になります。
+
 ## API エンドポイント
 
 | メソッド | エンドポイント | 説明 |

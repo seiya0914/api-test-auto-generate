@@ -104,3 +104,9 @@ OpenAPI 仕様は `openapi.yaml` ファイルで定義されています。こ�
 - [GitHub上のOpenAPI仕様ファイル](https://github.com/seiya0914/api-test-auto-generate/blob/main/openapi.yaml) - YAML形式の仕様ファイル
 
 GitHub Pagesを有効にするには、GitHubリポジトリの「Settings」→「Pages」から設定してください。
+
+### 自動更新の仕組み
+
+このリポジトリには、OpenAPI仕様が更新されるたびに自動的にGitHub Pages上のドキュメントを更新するGitHub Actionsワークフローが設定されています。メインブランチの`openapi.yaml`ファイルに変更がプッシュされると、自動的に`docs/openapi.yaml`ファイルも更新され、最新の仕様がSwagger UIに反映されます。
+
+この自動化により、APIドキュメントが常に最新の状態に保たれます。

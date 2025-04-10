@@ -1,0 +1,37 @@
+name: Update OpenAPI Docs
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'openapi.yaml'
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Update OpenAPI docs
+        run: |
+          # OpenAPI仕様ファイルをdocsディレクトリにコピー
+          cp openapi.yaml docs/
+          
+          # 変更をコミット
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/openapi.yaml
+          
+          # 変更があるか確認してからコミット
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "自動更新: OpenAPI仕様をdocsディレクトリに同期"
+            git push
+          fi

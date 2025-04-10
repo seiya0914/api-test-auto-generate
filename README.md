@@ -95,3 +95,12 @@ poetry run st run openapi.yaml --base-url=http://localhost:8000 --hypothesis-max
 ## OpenAPI 仕様
 
 OpenAPI 仕様は `openapi.yaml` ファイルで定義されています。この仕様を使用して、クライアントコードの生成やテストの自動化が可能です。
+
+### オンラインでの閲覧
+
+以下のリンクからOpenAPI仕様をオンラインで閲覧できます：
+
+- [GitHub Pages上のSwagger UI](https://seiya0914.github.io/api-test-auto-generate/) - 対話的なドキュメント
+- [GitHub上のOpenAPI仕様ファイル](https://github.com/seiya0914/api-test-auto-generate/blob/main/openapi.yaml) - YAML形式の仕様ファイル
+
+GitHub Pagesを有効にするには、GitHubリポジトリの「Settings」→「Pages」から設定してください。

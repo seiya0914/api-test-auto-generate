@@ -1,0 +1,240 @@
+openapi: 3.0.2
+info:
+  title: User Management API
+  version: 1.0.0
+  description: A RESTful API for managing users with database integration.
+servers:
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  /:
+    get:
+      summary: Root endpoint
+      operationId: getRoot
+      tags:
+        - Root
+      responses:
+        '200':
+          description: Welcome message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Welcome to the User Management API"
+
+  /users/:
+    get:
+      summary: Get a list of users
+      operationId: listUsers
+      tags:
+        - Users
+      parameters:
+        - name: skip
+          in: query
+          required: false
+          description: Number of records to skip
+          schema:
+            type: integer
+            default: 0
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of records to return
+          schema:
+            type: integer
+            default: 100
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserResponse'
+    post:
+      summary: Create a new user
+      operationId: createUser
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{userId}:
+    parameters:
+      - name: userId
+        in: path
+        required: true
+        description: The unique identifier of the user
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get a specific user by ID
+      operationId: getUser
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update an existing user
+      operationId: updateUser
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '400':
+          description: Invalid input data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a user
+      operationId: deleteUser
+      tags:
+        - Users
+      responses:
+        '204':
+          description: User deleted successfully
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    UserBase:
+      type: object
+      required:
+        - username
+        - email
+      properties:
+        username:
+          type: string
+          description: ユーザー名
+          example: yamada_taro
+        email:
+          type: string
+          format: email
+          description: メールアドレス
+          example: taro.yamada@example.com
+        full_name:
+          type: string
+          description: 氏名
+          example: 山田 太郎
+        department:
+          type: string
+          description: 部署名
+          example: 営業部
+
+    UserCreate:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+
+    UserUpdate:
+      type: object
+      properties:
+        username:
+          type: string
+          description: ユーザー名
+          example: yamada_taro_updated
+        email:
+          type: string
+          format: email
+          description: メールアドレス
+          example: taro.yamada.updated@example.com
+        full_name:
+          type: string
+          description: 氏名
+          example: 山田 太郎 (更新)
+        department:
+          type: string
+          description: 部署名
+          example: 営業部 (更新)
+
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          required:
+            - id
+            - created_at
+            - updated_at
+          properties:
+            id:
+              type: string
+              format: uuid
+              description: ユーザーID
+              example: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+            created_at:
+              type: string
+              format: date-time
+              description: 作成日時
+              example: "2025-04-09T08:56:01"
+            updated_at:
+              type: string
+              format: date-time
+              description: 更新日時
+              example: "2025-04-09T08:56:01"
+
+    Error:
+      type: object
+      required:
+        - detail
+      properties:
+        detail:
+          type: string
+          description: エラーの詳細メッセージ
+          example: "Invalid input data provided."

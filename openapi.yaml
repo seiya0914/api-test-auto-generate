@@ -74,6 +74,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+          links:
+            GetUserById:
+              operationId: getUser
+              parameters:
+                userId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `GET /users/{userId}`.
+            UpdateUser:
+              operationId: updateUser
+              parameters:
+                userId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `PUT /users/{userId}`.
+            DeleteUser:
+              operationId: deleteUser
+              parameters:
+                userId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `DELETE /users/{userId}`.
         '400':
           description: Invalid input data
           content:
@@ -102,6 +124,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+          links:
+            UpdateThisUser:
+              operationId: updateUser
+              parameters:
+                userId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `PUT /users/{userId}`.
+            DeleteThisUser:
+              operationId: deleteUser
+              parameters:
+                userId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `DELETE /users/{userId}`.
         '404':
           description: User not found
           content:
@@ -126,6 +163,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+          links:
+            GetUpdatedUser:
+              operationId: getUser
+              parameters:
+                userId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `GET /users/{userId}`.
+            DeleteUpdatedUser:
+              operationId: deleteUser
+              parameters:
+                userId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as
+                the `userId` parameter in `DELETE /users/{userId}`.
         '400':
           description: Invalid input data
           content:
@@ -202,39 +254,33 @@ components:
         department:
           type: string
           description: 部署名
-          example: 営業部 (更新)
+          example: 営業部
 
     UserResponse:
       allOf:
         - $ref: '#/components/schemas/UserBase'
         - type: object
-          required:
-            - id
-            - created_at
-            - updated_at
           properties:
             id:
               type: string
               format: uuid
-              description: ユーザーID
-              example: a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11
+              description: ユーザーの一意識別子
+              example: 3fa85f64-5717-4562-b3fc-2c963f66afa6
             created_at:
               type: string
               format: date-time
               description: 作成日時
-              example: "2025-04-09T08:56:01"
+              example: "2023-01-01T12:00:00Z"
             updated_at:
               type: string
               format: date-time
               description: 更新日時
-              example: "2025-04-09T08:56:01"
+              example: "2023-01-01T12:00:00Z"
 
     Error:
       type: object
-      required:
-        - detail
       properties:
         detail:
           type: string
           description: エラーの詳細メッセージ
-          example: "Invalid input data provided."
+          example: "User not found"

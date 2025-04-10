@@ -26,7 +26,7 @@ paths:
                     type: string
                     example: "Welcome to the User Management API"
 
-  /users/:
+  /users:
     get:
       summary: Get a list of users
       operationId: listUsers
@@ -35,18 +35,22 @@ paths:
       parameters:
         - name: skip
           in: query
-          required: false
           description: Number of records to skip
+          required: false
           schema:
             type: integer
             default: 0
+            minimum: 0
+            maximum: 1000
         - name: limit
           in: query
+          description: Maximum number of users to return
           required: false
-          description: Maximum number of records to return
           schema:
             type: integer
             default: 100
+            minimum: 1
+            maximum: 1000
       responses:
         '200':
           description: A list of users
@@ -56,6 +60,13 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/UserResponse'
+          links:
+            UpdateFirstUser:
+              $ref: '#/components/links/UpdateFirstUser'
+            DeleteFirstUser:
+              $ref: '#/components/links/DeleteFirstUser'
+            GetFirstUser:
+              $ref: '#/components/links/GetFirstUser'
     post:
       summary: Create a new user
       operationId: createUser
@@ -74,13 +85,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
-          links:
-            GetUserById:
-              $ref: '#/components/links/GetUserById'
-            UpdateUser:
-              $ref: '#/components/links/UpdateUser'
-            DeleteUser:
-              $ref: '#/components/links/DeleteUser'
         '400':
           description: Invalid input data
           content:
@@ -97,6 +101,7 @@ paths:
         schema:
           type: string
           format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
     get:
       summary: Get a specific user by ID
       operationId: getUser
@@ -138,11 +143,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
-          links:
-            GetUpdatedUser:
-              $ref: '#/components/links/GetUserById'
-            DeleteUpdatedUser:
-              $ref: '#/components/links/DeleteUser'
         '400':
           description: Invalid input data
           content:
@@ -181,6 +181,7 @@ components:
         username:
           type: string
           description: ユーザー名
+          minLength: 1
           example: yamada_taro
         email:
           type: string
@@ -206,6 +207,7 @@ components:
         username:
           type: string
           description: ユーザー名
+          minLength: 1
           example: yamada_taro_updated
         email:
           type: string
@@ -251,14 +253,6 @@ components:
           example: "User not found"
           
   links:
-    GetUserById:
-      operationId: getUser
-      parameters:
-        userId: '$response.body#/id'
-      description: >
-        The `id` value returned in the response can be used as
-        the `userId` parameter in `GET /users/{userId}`.
-    
     UpdateUser:
       operationId: updateUser
       parameters:
@@ -274,3 +268,27 @@ components:
       description: >
         The `id` value returned in the response can be used as
         the `userId` parameter in `DELETE /users/{userId}`.
+        
+    UpdateFirstUser:
+      operationId: updateUser
+      parameters:
+        userId: '$response.body#/0/id'
+      description: >
+        The `id` value of the first user in the response array can be used as
+        the `userId` parameter in `PUT /users/{userId}`.
+        
+    DeleteFirstUser:
+      operationId: deleteUser
+      parameters:
+        userId: '$response.body#/0/id'
+      description: >
+        The `id` value of the first user in the response array can be used as
+        the `userId` parameter in `DELETE /users/{userId}`.
+        
+    GetFirstUser:
+      operationId: getUser
+      parameters:
+        userId: '$response.body#/0/id'
+      description: >
+        The `id` value of the first user in the response array can be used as
+        the `userId` parameter in `GET /users/{userId}`.
